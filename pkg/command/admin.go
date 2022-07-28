@@ -15,8 +15,41 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-package commands
+package command
 
-type Commands struct {
-	Fn fn `cmd:"" help:"todo fn subcommand help"`
+import (
+	"time"
+
+	"github.com/funlessdev/funless-cli/pkg/docker"
+	"github.com/funlessdev/funless-cli/pkg/log"
+)
+
+type Admin struct {
+	Deploy deploy `cmd:"" help:"deploy sub sub command"`
+}
+
+type deploy struct {
+}
+
+func (d *deploy) Run(logger log.FLogger) error {
+	err := docker.RunPreflightChecks(logger)
+	if err != nil {
+		return err
+	}
+
+	logger.SpinnerSuffix("Deploying funless locally")
+
+	logger.StartSpinner("pulling component images")
+
+	time.Sleep(2 * time.Second)
+
+	logger.StopSpinner(true)
+
+	logger.StartSpinner("uploading data")
+
+	time.Sleep(2 * time.Second)
+
+	logger.StopSpinner(true)
+
+	return err
 }
